@@ -1,5 +1,5 @@
 import axios from "axios";
-import { Movie } from "../types/Movie";
+import { Movie, Video, Images } from "../types/Movie";
 
 const BASE_URL = "https://api.imdbapi.dev";
 
@@ -7,6 +7,16 @@ interface ApiGetMovieResponse {
     titles: Movie[];
     totalCount: number;
     nextPageToken?: string;
+}
+
+interface ApiGetVideoResponse {
+    videos: Video[];
+    totalCount: number;
+}
+
+interface ApiGetImagesResponse {
+    images: Images[];
+    totalCount: number;
 }
 
 /**
@@ -32,3 +42,14 @@ export const searchMovies = async (query: string): Promise<Movie[]> => {
     const res = await axios.get<ApiGetMovieResponse>(`${BASE_URL}/search/titles?query=${query}`);
     return res.data.titles;
 };
+
+export const fetchVideos = async (id:string): Promise<ApiGetVideoResponse> => {
+    const res = await axios.get<ApiGetVideoResponse>(`${BASE_URL}/titles/${id}/videos`)
+    return res.data
+}
+
+export const fetchImages = async (id:string): Promise<ApiGetImagesResponse> => {
+    const res = await axios.get<ApiGetImagesResponse>(`${BASE_URL}/titles/${id}/images`)
+    return res.data
+}
+

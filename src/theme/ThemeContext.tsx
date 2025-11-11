@@ -10,7 +10,7 @@ interface ThemeContextType {
 
 const ColorModeContext = createContext<ThemeContextType>({
   mode: "light",
-  toggleMode: () => {},
+  toggleMode: () => { },
 });
 
 export const useColorMode = () => useContext(ColorModeContext);
@@ -45,6 +45,9 @@ export const ColorModeProvider: React.FC<{ children: ReactNode }> = ({ children 
           },
           secondary: {
             main: mode === "light" ? "#000" : "#f5c518",
+          },
+          info: {
+            main: mode === "light" ? "#0E63BE" : "#5799EF"
           },
           background: {
             default: mode === "light" ? "#fafafa" : "#0f0f0f",
@@ -82,6 +85,15 @@ export const ColorModeProvider: React.FC<{ children: ReactNode }> = ({ children 
             },
           },
         },
+        breakpoints: {
+          values: {
+            xs: 0,
+            sm: 600,
+            md: 900,
+            lg: 1024,
+            xl: 1200,
+          },
+        }
       }),
     [mode]
   );

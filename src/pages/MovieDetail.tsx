@@ -9,6 +9,7 @@ import {
   CircularProgress,
   Chip,
 } from "@mui/material";
+import HeroBanner from "../components/MovieDetails/HeroBanner";
 
 export default function MovieDetail() {
   const { id } = useParams<{ id: string }>();
@@ -27,36 +28,7 @@ export default function MovieDetail() {
 
   return (
     <Container sx={{ py: 4 }}>
-      <Box display="flex" gap={4} flexWrap="wrap">
-        <img
-          src={movie.primaryImage?.url ?? "https://placehold.co/300x450"}
-          alt={movie.primaryTitle}
-          style={{ width: "300px", borderRadius: "8px" }}
-        />
-        <Box flex={1}>
-          <Typography variant="h4" gutterBottom>
-            {movie.primaryTitle}
-          </Typography>
-          <Typography variant="body1" color="text.secondary" gutterBottom>
-            {movie.plot}
-          </Typography>
-          {movie.rating && (
-            <Typography variant="body2" sx={{ my: 1 }}>
-              ⭐ {movie.rating.aggregateRating} ({movie.rating.voteCount} votes)
-            </Typography>
-          )}
-          {movie.startYear && (
-            <Typography variant="body2" sx={{ mb: 1 }}>
-              Release Year: {movie.startYear}
-            </Typography>
-          )}
-          <Box sx={{ mt: 2, display: "flex", gap: 1 }}>
-            {movie.genres?.map((g) => (
-              <Chip key={g} label={g} />
-            ))}
-          </Box>
-        </Box>
-      </Box>
+      <HeroBanner movie={movie} />
     </Container>
   );
 }
