@@ -1,9 +1,9 @@
-import { Box, Chip, Grid, Link, List, ListItem, Typography } from '@mui/material'
+import { Box, Chip, Grid, Icon, Link, List, ListItem, Typography } from '@mui/material'
 import React, { useState } from 'react'
 import { Images, Movie, Video } from '../../types/Movie';
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import { fetchImages, fetchVideos } from '../../api/imdb';
-import { PhotoLibrary, VideoLibrary } from '@mui/icons-material';
+import { ChevronRight, PhotoLibrary, VideoLibrary } from '@mui/icons-material';
 
 export default function HeroBanner({ movie }: { movie: Movie }) {
     const [videos, setVideos] = useState<Video[]>([])
@@ -58,14 +58,23 @@ export default function HeroBanner({ movie }: { movie: Movie }) {
         <>
             <Grid display="flex" gap={4} marginBottom={1}>
                 <Grid size='grow'>
-                    <Typography variant="h3">
+                    <Typography sx={{
+                        fontSize: {
+                            xs: 32, sm: 48
+                        }, lineHeight: '2rem'
+                    }}>
                         {movie.primaryTitle}
                     </Typography>
                     <Typography variant="subtitle2" gutterBottom>
                         {movie.startYear} - {duration(movie.runtimeSeconds ?? 0)}
                     </Typography>
                 </Grid>
-                <Grid size='auto'>
+                <Grid size='auto' sx={{
+                    display: {
+                        lg: 'flex',
+                        xs: 'none'
+                    }
+                }}>
                     <Grid container justifyContent={'flex-end'}>
                         <Grid size="auto">
                             <Typography variant="caption" sx={{ letterSpacing: '0.12em' }}>
@@ -100,6 +109,9 @@ export default function HeroBanner({ movie }: { movie: Movie }) {
                         aspectRatio: "2/3", // menjaga rasio 2:3 (300x450)
                         // flex: "1 1 auto",
                         // flexGrow: 1,
+                        display: {
+                            sm: 'flex', xs: 'none'
+                        }
                     }}>
                     <img
                         src={movie.primaryImage?.url ?? "https://placehold.co/300x450"}
@@ -161,13 +173,16 @@ export default function HeroBanner({ movie }: { movie: Movie }) {
                                 sx={{
                                     width: 50,
                                     height: 50,
-                                    display: 'inline-flex',
+                                    // display: 'inline-flex',
                                     alignItems: 'center',
                                     justifyContent: 'center',
                                     // borderWidth: 1,
                                     borderColor: 'white',
                                     borderRadius: 25,
-                                    borderStyle: 'solid'
+                                    borderStyle: 'solid',
+                                    display: {
+                                        xs: 'none', md: 'inline-flex'
+                                    },
                                 }}
                                 aria-hidden
                             >
@@ -177,12 +192,69 @@ export default function HeroBanner({ movie }: { movie: Movie }) {
                             </Box>
 
                             <Box sx={{ display: 'flex', flexDirection: 'row', minWidth: 0 }}>
-                                <Typography variant="h5">
+                                <Typography sx={{
+                                    fontSize: {
+                                        xs: 16, md: 24
+                                    }
+                                }}>
                                     Play trailer
                                 </Typography>
-                                <Typography variant="h6" marginLeft={1}>
+                                <Typography marginLeft={1}
+                                    sx={{
+                                        fontSize: {
+                                            xs: 16, md: 20
+                                        }
+                                    }}
+                                >
                                     {duration2(videos[0]?.runtimeSeconds)}
                                 </Typography>
+                            </Box>
+                        </Box>
+
+                        {/* overlay play + text bottom-left untuk < lg */}
+                        <Box
+                            sx={{
+                                position: 'absolute',
+                                top: '50%',
+                                left: '50%',
+                                transform: 'translate(-50%, -50%)',
+                                display: {
+                                    md: 'none', xs: 'flex'
+                                },
+                                alignItems: 'center',
+                                gap: 1,
+                                // bgcolor: 'rgba(0,0,0,0.6)',
+                                color: '#fff',
+                                px: 1.25,
+                                py: 0.5,
+                                borderRadius: 2,
+                                maxWidth: '70%',
+                                textOverflow: 'ellipsis',
+                                overflow: 'hidden',
+                            }}
+                        >
+                            {/* inline play icon */}
+                            <Box
+                                component="span"
+                                sx={{
+                                    width: 50,
+                                    height: 50,
+                                    // display: 'inline-flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    // borderWidth: 1,
+                                    borderColor: 'white',
+                                    borderRadius: 25,
+                                    borderStyle: 'solid',
+                                    display: {
+                                        xs: 'none', sm: 'inline-flex'
+                                    },
+                                }}
+                                aria-hidden
+                            >
+                                <svg width="30" height="30" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M8 5v14l11-7L8 5z" fill="currentColor" />
+                                </svg>
                             </Box>
                         </Box>
                     </Link>
@@ -210,7 +282,10 @@ export default function HeroBanner({ movie }: { movie: Movie }) {
                             height: '100%',
                             boxSizing: 'border-box',
                             borderRadius: 4,
-                            backgroundColor: 'lightgrey'
+                            backgroundColor: (theme) =>
+                                theme.palette.mode === 'dark'
+                                    ? theme.palette.grey[800]
+                                    : theme.palette.grey[300],
                         }}
                     >
                         <Grid
@@ -220,11 +295,17 @@ export default function HeroBanner({ movie }: { movie: Movie }) {
                             alignItems="center"
                             sx={{ height: '100%', width: '100%', gap: 1 }}
                         >
-                            <Grid >
-                                <VideoLibrary fontSize="large" />
+                            <Grid
+                                sx={{
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    fontSize: { lg: 35, xs: 16 }, // font responsif
+                                    lineHeight: 1, // penting agar tidak ada jarak aneh vertikal
+                                }}>
+                                <VideoLibrary fontSize="inherit" />
                             </Grid>
                             <Grid >
-                                <Typography variant="caption">{countVid} VIDEOS</Typography>
+                                <Typography variant="caption" sx={{ lineHeight: 1 }}>{countVid} VIDEOS</Typography>
                             </Grid>
                         </Grid>
                     </Grid>
@@ -238,7 +319,11 @@ export default function HeroBanner({ movie }: { movie: Movie }) {
                             height: '100%',
                             boxSizing: 'border-box',
                             borderRadius: 4,
-                            backgroundColor: 'lightgrey'
+                            backgroundColor: (theme) =>
+                                theme.palette.mode === 'dark'
+                                    ? theme.palette.grey[800]
+                                    : theme.palette.grey[300],
+                            paddingY: 1
                         }}
                     >
                         <Grid
@@ -248,47 +333,123 @@ export default function HeroBanner({ movie }: { movie: Movie }) {
                             alignItems="center"
                             sx={{ height: '100%', width: '100%', gap: 1 }}
                         >
-                            <Grid >
-                                <PhotoLibrary fontSize="large" />
+                            <Grid sx={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                fontSize: { lg: 35, xs: 16 },
+                                lineHeight: 1,
+                            }}>
+                                <PhotoLibrary fontSize="inherit" />
                             </Grid>
                             <Grid >
-                                <Typography variant="caption">{countImg} PHOTOS</Typography>
+                                <Typography variant="caption"
+                                    sx={{
+                                        lineHeight: 1,
+                                    }}
+                                >{countImg} PHOTOS</Typography>
                             </Grid>
                         </Grid>
                     </Grid>
                 </Grid>
-            </Grid>
-            <Box sx={{ mt: 2, display: "flex", gap: 1 }}>
-                {movie.genres?.map((g: any) => (
-                    <Chip key={g} label={g} />
-                ))}
-            </Box>
+            </Grid >
+
             <List>
                 <ListItem sx={{ paddingX: 0, borderBottomStyle: 'solid', borderBottomWidth: 1, borderBottomColor: 'gray' }}>
-                    <Typography variant='body1'>{movie.plot}</Typography>
+                    <Box>
+                        <Box
+                            sx={{
+                                display: "flex",
+                                flexDirection: { sm: "row" }, // stack di mobile, sejajar di desktop
+                                gap: 2,
+                                alignItems: "flex-start",
+                            }}
+                        >
+                            <Box
+                                component="img"
+                                src={movie.primaryImage?.url ?? "https://placehold.co/200x300"}
+                                alt={movie.primaryTitle}
+                                sx={{
+                                    // width: { sm: 200 }, // penuh di HP, 200px di layar lebar
+                                    height: 178,
+                                    '@media (max-width:480px)': {
+                                        height: 140.59,
+                                    },
+                                    borderRadius: 2,
+                                    objectFit: "cover",
+                                    // flexShrink: 0, // supaya gambar tidak mengecil
+                                    display: { xs: 'flex', sm: 'none' }
+                                }}
+                            />
+                            <Box sx={{
+                                flex: 1,
+                                fontSize: 16,
+                                '@media (max-width:480px)': {
+                                    fontSize: 14,
+                                },
+                            }}>
+                                <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1, mb: 2 }}>
+                                    {movie.genres?.map((g: any) => (
+                                        <Chip key={g} label={g} />
+                                    ))}
+                                </Box>
 
+                                <Typography variant='inherit'>{movie.plot}</Typography>
+                            </Box>
+                        </Box>
+                        {/* <Box sx={{ display: "flex", gap: 1, mb: 2 }}>
+                            {movie.genres?.map((g: any) => (
+                                <Chip key={g} label={g} />
+                            ))}
+                        </Box>
+                        <Typography variant='body1'>{movie.plot}</Typography> */}
+                        <Box sx={{
+                            display: {
+                                lg: 'none', xs: 'flex'
+                            },
+                            marginY: 3
+                        }}>
+                            <Typography variant='body1'>
+                                ⭐
+                            </Typography>
+                            <Typography variant="body1">{movie.rating?.aggregateRating}</Typography>
+                            <Typography variant="body1" fontWeight='normal'>/10</Typography>
+                            <Typography variant='caption' marginLeft={1}>{voteCount(movie.rating?.voteCount ?? 0)}</Typography>
+                        </Box>
+                    </Box>
                 </ListItem>
                 <ListItem sx={{ paddingX: 0, borderBottomStyle: 'solid', borderBottomWidth: 1, borderBottomColor: 'gray' }}>
-                    <Typography marginRight={3}>Director</Typography>
+                    <Typography marginRight={2} fontWeight={'bold'}>Director</Typography>
                     <Link href={`https://imdb.com/video/${videos[0]?.id}`}>
                         <Typography color='info'>{movie.directors?.[0]?.displayName}</Typography>
                     </Link>
                 </ListItem>
                 <ListItem sx={{ paddingX: 0, borderBottomStyle: 'solid', borderBottomWidth: 1, borderBottomColor: 'gray' }}>
-                    <Typography marginRight={3}>Writer</Typography>
+                    <Typography marginRight={2} fontWeight={'bold'}>Writer</Typography>
                     <Link href={`https://imdb.com/video/${videos[0]?.id}`}>
                         <Typography color='info'>{movie.writers?.[0]?.displayName}</Typography>
                     </Link>
                 </ListItem>
-                <ListItem sx={{ paddingX: 0, borderBottomStyle: 'solid', borderBottomWidth: 1, borderBottomColor: 'gray' }}>
-                    <Typography marginRight={3}>Stars</Typography>
+                <ListItem
+                    sx={{
+                        px: 0,
+                        borderBottom: 1,
+                        borderBottomColor: 'gray',
+                        display: 'flex',
+                        justifyContent: 'space-between', // ✅ kiri-kanan rata
+                        alignItems: 'center',            // ✅ vertikal sejajar
+                    }}
+                >
+                    {/* Kiri: Label dan daftar aktor */}
+                    <Box sx={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap' }}>
+                        <Typography marginRight={2} fontWeight={'bold'}>Stars</Typography>
+
                         {(movie.stars ?? []).map((item, index, arr) => {
                             const isLast = index === arr.length - 1;
-    
+
                             return (
                                 <React.Fragment key={item.id ?? index}>
                                     <Link
-                                        href={`https://imdb.com/name/${item.id}`} // ✅ lebih akurat untuk aktor
+                                        href={`https://imdb.com/name/${item.id}`}
                                         underline="hover"
                                         target="_blank"
                                         rel="noopener noreferrer"
@@ -296,14 +457,14 @@ export default function HeroBanner({ movie }: { movie: Movie }) {
                                     >
                                         <Typography
                                             component="span"
-                                            color="info"
-                                            variant="body2"
+                                            color="info.main"
+                                            variant="body1"
                                             sx={{ fontWeight: 500 }}
                                         >
                                             {item.displayName}
                                         </Typography>
                                     </Link>
-    
+
                                     {!isLast && (
                                         <Typography
                                             component="span"
@@ -317,7 +478,10 @@ export default function HeroBanner({ movie }: { movie: Movie }) {
                                 </React.Fragment>
                             );
                         })}
+                    </Box>
 
+                    {/* Kanan: Chevron */}
+                    <ChevronRight fontSize="medium" color="action" />
                 </ListItem>
             </List>
             {/* <Box display="flex" gap={4} flexWrap="wrap">
