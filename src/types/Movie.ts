@@ -67,3 +67,13 @@ export interface Images {
   width: number;
   height: number;
 }
+
+export interface Data {
+    // data: {
+        movie: Movie|null;
+        videos: Video[];
+        images: Images[];
+        countVid: number;
+        countImg: string;
+    // }
+}

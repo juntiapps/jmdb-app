@@ -1,58 +1,11 @@
 import { Box, Chip, Grid, Icon, Link, List, ListItem, Typography } from '@mui/material'
-import React, { useState } from 'react'
-import { Images, Movie, Video } from '../../types/Movie';
-import { keepPreviousData, useQuery } from '@tanstack/react-query';
-import { fetchImages, fetchVideos } from '../../api/imdb';
+import React from 'react'
+import { Data } from '../../types/Movie';
 import { ChevronRight, PhotoLibrary, VideoLibrary } from '@mui/icons-material';
+import { duration, duration2, voteCount } from '../../helpers/Converter';
 
-export default function HeroBanner({ movie }: { movie: Movie }) {
-    const [videos, setVideos] = useState<Video[]>([])
-    const [countVid, setCountVid] = useState<number>(0)
-    const [images, setImages] = useState<Images[]>([])
-    const [countImg, setCountImg] = useState<number>(0)
-
-    const duration = (seconds: number) => {
-        const mins = Math.floor(seconds / 60);
-        const hrs = Math.floor(mins / 60);
-        const remMins = mins % 60;
-        return hrs > 0 ? `${hrs}h ${remMins}m` : `${remMins}m`;
-    };
-
-    const duration2 = (seconds: number) => {
-        const mins = Math.floor(seconds / 60);
-        const secs = seconds % 60;
-        const secsStr = secs.toString().padStart(2, '0');
-        return `${mins}:${secsStr}`;
-    };
-
-    const voteCount = (count: number) => {
-        if (count >= 1000000) {
-            return `${(count / 1000000).toFixed(0)}M`;
-        }
-        if (count >= 1000) {
-            return `${(count / 1000).toFixed(0)}K`;
-        }
-        return count.toString();
-    }
-
-    const { data, isLoading, isFetching } = useQuery({
-        queryKey: ["videos"],
-        queryFn: async () => {
-            const videos = await fetchVideos(movie.id);
-            const images = await fetchImages(movie.id);
-            setVideos((prev) =>
-                videos.videos || []
-            );
-            setCountVid((prev) => videos.totalCount || 0)
-            setImages((prev) =>
-                images.images || []
-            );
-            setCountImg((prev) => images.totalCount || 0)
-            const data = { images: images.images, videos: videos.videos }
-            return data;
-        },
-        placeholderData: keepPreviousData, // biar gak flicker saat pagination
-    });
+export default function HeroBanner({ data }: { data: Data }) {
+    const { movie, videos, images, countImg, countVid } = data
 
     return (
         <>
@@ -63,10 +16,10 @@ export default function HeroBanner({ movie }: { movie: Movie }) {
                             xs: 32, sm: 48
                         }, lineHeight: '2rem'
                     }}>
-                        {movie.primaryTitle}
+                        {movie?.primaryTitle}
                     </Typography>
                     <Typography variant="subtitle2" gutterBottom>
-                        {movie.startYear} - {duration(movie.runtimeSeconds ?? 0)}
+                        {movie?.startYear} - {duration(movie?.runtimeSeconds ?? 0)}
                     </Typography>
                 </Grid>
                 <Grid size='auto' sx={{
@@ -86,10 +39,10 @@ export default function HeroBanner({ movie }: { movie: Movie }) {
                                 </Typography>
                                 <Box>
                                     <Box display="flex" alignItems="baseline" gap={0.5}>
-                                        <Typography variant="h6">{movie.rating?.aggregateRating}</Typography>
+                                        <Typography variant="h6">{movie?.rating?.aggregateRating}</Typography>
                                         <Typography variant="subtitle1">/10</Typography>
                                     </Box>
-                                    <Typography variant='caption'>{voteCount(movie.rating?.voteCount ?? 0)}</Typography>
+                                    <Typography variant='caption'>{voteCount(movie?.rating?.voteCount ?? 0)}</Typography>
                                 </Box>
                             </Box>
                         </Grid>
@@ -114,8 +67,8 @@ export default function HeroBanner({ movie }: { movie: Movie }) {
                         }
                     }}>
                     <img
-                        src={movie.primaryImage?.url ?? "https://placehold.co/300x450"}
-                        alt={movie.primaryTitle}
+                        src={movie?.primaryImage?.url ?? "https://placehold.co/300x450"}
+                        alt={movie?.primaryTitle}
                         style={{
                             width: '100%',
                             height: '100%',
@@ -366,8 +319,8 @@ export default function HeroBanner({ movie }: { movie: Movie }) {
                         >
                             <Box
                                 component="img"
-                                src={movie.primaryImage?.url ?? "https://placehold.co/200x300"}
-                                alt={movie.primaryTitle}
+                                src={movie?.primaryImage?.url ?? "https://placehold.co/200x300"}
+                                alt={movie?.primaryTitle}
                                 sx={{
                                     // width: { sm: 200 }, // penuh di HP, 200px di layar lebar
                                     height: 178,
@@ -388,12 +341,12 @@ export default function HeroBanner({ movie }: { movie: Movie }) {
                                 },
                             }}>
                                 <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1, mb: 2 }}>
-                                    {movie.genres?.map((g: any) => (
+                                    {movie?.genres?.map((g: any) => (
                                         <Chip key={g} label={g} />
                                     ))}
                                 </Box>
 
-                                <Typography variant='inherit'>{movie.plot}</Typography>
+                                <Typography variant='inherit'>{movie?.plot}</Typography>
                             </Box>
                         </Box>
                         {/* <Box sx={{ display: "flex", gap: 1, mb: 2 }}>
@@ -411,22 +364,22 @@ export default function HeroBanner({ movie }: { movie: Movie }) {
                             <Typography variant='body1'>
                                 ⭐
                             </Typography>
-                            <Typography variant="body1">{movie.rating?.aggregateRating}</Typography>
+                            <Typography variant="body1">{movie?.rating?.aggregateRating}</Typography>
                             <Typography variant="body1" fontWeight='normal'>/10</Typography>
-                            <Typography variant='caption' marginLeft={1}>{voteCount(movie.rating?.voteCount ?? 0)}</Typography>
+                            <Typography variant='caption' marginLeft={1}>{voteCount(movie?.rating?.voteCount ?? 0)}</Typography>
                         </Box>
                     </Box>
                 </ListItem>
                 <ListItem sx={{ paddingX: 0, borderBottomStyle: 'solid', borderBottomWidth: 1, borderBottomColor: 'gray' }}>
                     <Typography marginRight={2} fontWeight={'bold'}>Director</Typography>
                     <Link href={`https://imdb.com/video/${videos[0]?.id}`}>
-                        <Typography color='info'>{movie.directors?.[0]?.displayName}</Typography>
+                        <Typography color='info'>{movie?.directors?.[0]?.displayName}</Typography>
                     </Link>
                 </ListItem>
                 <ListItem sx={{ paddingX: 0, borderBottomStyle: 'solid', borderBottomWidth: 1, borderBottomColor: 'gray' }}>
                     <Typography marginRight={2} fontWeight={'bold'}>Writer</Typography>
                     <Link href={`https://imdb.com/video/${videos[0]?.id}`}>
-                        <Typography color='info'>{movie.writers?.[0]?.displayName}</Typography>
+                        <Typography color='info'>{movie?.writers?.[0]?.displayName}</Typography>
                     </Link>
                 </ListItem>
                 <ListItem
@@ -443,7 +396,7 @@ export default function HeroBanner({ movie }: { movie: Movie }) {
                     <Box sx={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap' }}>
                         <Typography marginRight={2} fontWeight={'bold'}>Stars</Typography>
 
-                        {(movie.stars ?? []).map((item, index, arr) => {
+                        {(movie?.stars ?? []).map((item, index, arr) => {
                             const isLast = index === arr.length - 1;
 
                             return (
@@ -484,36 +437,6 @@ export default function HeroBanner({ movie }: { movie: Movie }) {
                     <ChevronRight fontSize="medium" color="action" />
                 </ListItem>
             </List>
-            {/* <Box display="flex" gap={4} flexWrap="wrap">
-                <img
-                    src={movie.primaryImage?.url ?? "https://placehold.co/300x450"}
-                    alt={movie.primaryTitle}
-                    style={{ height: "300px", borderRadius: "8px" }}
-                />
-                <Box flex={1}>
-                    <Typography variant="h4" gutterBottom>
-                        {movie.primaryTitle}
-                    </Typography>
-                    <Typography variant="body1" color="text.secondary" gutterBottom>
-                        {movie.plot}
-                    </Typography>
-                    {movie.rating && (
-                        <Typography variant="body2" sx={{ my: 1 }}>
-                            ⭐ {movie.rating.aggregateRating} ({movie.rating.voteCount} votes)
-                        </Typography>
-                    )}
-                    {movie.startYear && (
-                        <Typography variant="body2" sx={{ mb: 1 }}>
-                            Release Year: {movie.startYear}
-                        </Typography>
-                    )}
-                    <Box sx={{ mt: 2, display: "flex", gap: 1 }}>
-                        {movie.genres?.map((g: any) => (
-                            <Chip key={g} label={g} />
-                        ))}
-                    </Box>
-                </Box>
-            </Box> */}
         </>
     )
 }
