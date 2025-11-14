@@ -8,6 +8,7 @@ import {
 } from "@mui/material";
 import HeroBanner from "../components/MovieDetails/HeroBanner";
 import Videos from "../components/MovieDetails/Videos";
+import Photos from "../components/MovieDetails/Photos";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
 
 export default function MovieDetail() {
@@ -31,6 +32,7 @@ export default function MovieDetail() {
         countVid: videoData.totalCount || 0,
         images: imageData.images || [],
         countImg,
+        realCountImg: imageData.totalCount ||0
       };
     },
     enabled: !!id,
@@ -49,6 +51,7 @@ export default function MovieDetail() {
     <Container sx={{ py: 4 }}>
       <HeroBanner data={data} />
       <Videos length={data.countVid} videos={data.videos} />
+      <Photos length={data.realCountImg} images={data.images} />
     </Container>
   );
 }

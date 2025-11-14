@@ -13,7 +13,7 @@ export default function SectionTitle({ title = "", length = 0 }) {
             my: 3,
         }}>
             <Typography sx={{
-                fontSize: { xs: 22, sm: 28 },
+                fontSize: { xs: 18, sm: 22 },
                 lineHeight: 1, // penting biar text nggak ada “padding” vertikal
                 mr: 2,
                 fontWeight: 'bold'

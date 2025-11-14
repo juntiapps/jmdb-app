@@ -75,5 +75,6 @@ export interface Data {
         images: Images[];
         countVid: number;
         countImg: string;
+        realCountImg: number;
     // }
 }
