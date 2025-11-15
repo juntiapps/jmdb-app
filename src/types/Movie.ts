@@ -69,12 +69,37 @@ export interface Images {
 }
 
 export interface Data {
-    // data: {
-        movie: Movie|null;
-        videos: Video[];
-        images: Images[];
-        countVid: number;
-        countImg: string;
-        realCountImg: number;
-    // }
+  movie: Movie | null;
+  videos: Video[];
+  images: Images[];
+  countVid: number;
+  countImg: string;
+  realCountImg: number;
+  topCast: TopCastData;
+}
+
+export interface TopCast {
+  id: string;
+  displayName: string;
+  characters?: string[];
+  primaryImage: PrimaryImage;
+}
+
+export interface Credits {
+  name: Name;
+  category: string;
+  characters: string[];
+}
+
+interface Name {
+  id: string;
+  displayName: string;
+  alternativeNames: string[];
+  primaryImage: PrimaryImage;
+  primaryProfessions: string;
+}
+
+export interface TopCastData {
+    data: TopCast[]
+    totalCount: number
 }

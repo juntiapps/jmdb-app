@@ -28,6 +28,7 @@ const Header: React.FC = () => {
                         textDecoration: "none",
                         fontWeight: "bold",
                         color: mode === "light" ? "#000" : "#f5c518",
+                        mr:1
                     }}
                 >
                     JMDb
