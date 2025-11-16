@@ -1,5 +1,5 @@
 import axios from "axios";
-import { Movie, Video, Images, Credits, TopCast, TopCastData } from "../types/Movie";
+import { Movie, Video, Images, Credits, TopCast, TopCastData, AwardNomination, AwardNominationStats, AwardNominationData } from "../types/Movie";
 
 const BASE_URL = "https://api.imdbapi.dev";
 
@@ -76,3 +76,8 @@ export const fetchTopCast = async (id: string): Promise<TopCastData> => {
     }
 }
 
+export const fetchAwardNomination = async (id: string): Promise<AwardNomination> => {
+    const res = await axios.get<AwardNomination>(`${BASE_URL}/titles/${id}/awardNominations`)
+    
+    return res.data
+}

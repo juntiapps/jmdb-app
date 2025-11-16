@@ -10,7 +10,8 @@ export default function SectionTitle({ title = "", length = 0 }) {
             alignItems: 'center',
             borderLeft: (theme) => `4px solid ${theme.palette.primary.main}`,
             px: 1,
-            my: 3,
+            mt: 7,
+            mb: 3
         }}>
             <Typography sx={{
                 fontSize: { xs: 18, sm: 22 },

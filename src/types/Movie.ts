@@ -76,6 +76,32 @@ export interface Data {
   countImg: string;
   realCountImg: number;
   topCast: TopCastData;
+  awardNominationStats?: AwardNominationStats;
+}
+
+export interface AwardNomination {
+  stats: AwardNominationStats;
+  awardNomination: AwardNominationData[];
+}
+
+export interface AwardNominationStats {
+  nominationCount: number;
+  winCount: number;
+}
+
+export interface AwardNominationData {
+  nominees : Name;
+  event : Event;
+  year : number;
+  text : string;
+  category :string;
+  isWinner: boolean;
+  winnerRank: number;
+}
+
+export interface Event {
+  id: string;
+  name: string;
 }
 
 export interface TopCast {
