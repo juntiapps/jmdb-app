@@ -91,7 +91,7 @@ export interface Credits {
   characters: string[];
 }
 
-interface Name {
+export interface Name {
   id: string;
   displayName: string;
   alternativeNames: string[];

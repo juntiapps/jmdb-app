@@ -55,7 +55,7 @@ export default function MovieDetail() {
       <HeroBanner data={data} />
       <Videos length={data.countVid} videos={data.videos} />
       <Photos length={data.realCountImg} images={data.images} />
-      <TopCast topCast={data.topCast.data} length={data.topCast.totalCount} />
+      <TopCast topCast={data.topCast.data} length={data.topCast.totalCount} directors={data.movie.directors!} writers={data.movie.writers!} />
     </Container>
   );
 }
