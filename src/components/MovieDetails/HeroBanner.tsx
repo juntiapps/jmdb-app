@@ -5,7 +5,7 @@ import { PhotoLibrary, VideoLibrary } from "@mui/icons-material";
 import { CSSProperties } from "react";
 import { duration, duration2, voteCount } from "../../helpers/Converter";
 import NameList from "../NameList";
-import { Data } from "../../types/Movie";
+import { Data, MovieInterest } from "../../types/Movie";
 import { StatsPanel } from "./HeroBanner/Stats";
 import { PlayCenterOverlay, PlayOverlay } from "./HeroBanner/PlayButton";
 
@@ -13,7 +13,7 @@ export default function HeroBanner({ data }: { data: Data }) {
     const { movie, videos, images, countImg, countVid } = data;
 
     const posterUrl = movie?.primaryImage?.url ?? "https://placehold.co/300x450";
-    const trailer = videos[0];
+    const trailer = videos.filter(i => i.name.toLowerCase().includes('trailer'))[0];
     const trailerImg = trailer?.primaryImage?.url ?? "https://placehold.co/450x300";
 
     return (
@@ -139,8 +139,8 @@ export default function HeroBanner({ data }: { data: Data }) {
 
                             <Box sx={{ flex: 1, fontSize: { xs: 14, sm: 16 } }}>
                                 <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1, mb: 2 }}>
-                                    {movie?.genres?.map((g: string) => (
-                                        <Chip key={g} label={g} />
+                                    {movie?.interests?.map((g: MovieInterest) => (
+                                        <Chip key={g.id} label={g.name} />
                                     ))}
                                 </Box>
                                 <Typography variant="inherit">{movie?.plot}</Typography>

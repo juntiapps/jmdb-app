@@ -1,9 +1,11 @@
-import { ListItem, Typography, Link, Box, Grid, useMediaQuery, List, ListItemText } from '@mui/material';
+import { ListItem, Typography, Link, Box, Grid, useMediaQuery, List, ListItemText, ListItemButton } from '@mui/material';
 import React, { useLayoutEffect, useRef, useState } from 'react'
-import { MovieDirector, MovieWriter, Name } from '../types/Movie';
+import { Movie, MovieDirector, MovieOrigin, MovieWriter, Name } from '../types/Movie';
 import { ChevronRight } from '@mui/icons-material';
 
-export default function _NameList({ names, label, action = false }: { names?: MovieDirector[] | MovieWriter[], label: string, action?: boolean }) {
+export default function _NameList(
+    { names, label, action = false, linkTemplate, linkAction }:
+        { names?: MovieDirector[] | MovieWriter[], label: string, action?: boolean, linkTemplate?: string, linkAction?: string }) {
     let addedProps = {}
     const textRef = useRef<HTMLDivElement>(null);
     const [lineCount, setLineCount] = useState(1);
@@ -35,10 +37,11 @@ export default function _NameList({ names, label, action = false }: { names?: Mo
                         {names?.map((item, index, arr) => {
                             const isLast = index === arr.length - 1;
 
+
                             return (
                                 <React.Fragment key={item.id ?? index}>
                                     <Link
-                                        href={`https://imdb.com/name/${item.id}`}
+                                        href={label === 'Genre' ? `${linkTemplate}${item.displayName}` : `${linkTemplate}${["Country of origin", "Language"].includes(label) ? '' : '/'}${item.id}`}
                                         underline="hover"
                                         target="_blank"
                                         rel="noopener noreferrer"
@@ -81,16 +84,43 @@ export default function _NameList({ names, label, action = false }: { names?: Mo
     }
 
     return (
-        <ListItem sx={{ paddingX: 0, borderBottomStyle: 'solid', borderBottomWidth: 1, borderBottomColor: 'gray', ...addedProps }}>
-            {action ? (<>
-                <Box sx={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap' }}>
-                    <Main />
+        <ListItem
+            sx={{
+                paddingX: 0,
+                borderBottomStyle: "solid",
+                borderBottomWidth: 1,
+                borderBottomColor: "gray",
+                ...addedProps
+            }}
+        >
+            {action ? (
+                <Box
+                    component="button"
+                    onClick={() => (window.open(linkAction, '_blank'))}
+                    style={{
+                        all: "unset",        // hilangkan style button
+                        cursor: "pointer",
+                        width: "100%",
+                        display: "flex",
+                        alignItems: "center",
+                    }}
+                >
+                    <Box
+                        sx={{
+                            display: "flex",
+                            alignItems: "center",
+                            flexWrap: "wrap",
+                            flex: 1,
+                        }}
+                    >
+                        <Main />
+                    </Box>
+
+                    <ChevronRight fontSize="medium" color="action" />
                 </Box>
-                <ChevronRight fontSize="medium" color="action" />
-            </>
-            ) : (<Main />)}
-
+            ) : (
+                <Main />
+            )}
         </ListItem>
-
     )
 }

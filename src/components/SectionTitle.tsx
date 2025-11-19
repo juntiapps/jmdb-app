@@ -1,7 +1,7 @@
 import { ChevronRight } from '@mui/icons-material'
 import { Box, Typography, useTheme } from '@mui/material'
 
-export default function SectionTitle({ title = "", length = 0 }) {
+export default function SectionTitle({ title = "", length = 0, action = true }) {
     const theme = useTheme()
     return (
         <Box sx={{
@@ -21,15 +21,20 @@ export default function SectionTitle({ title = "", length = 0 }) {
             }}>
                 {title}
             </Typography>
-            <Typography sx={{
-                fontSize: 12,
-                lineHeight: 1,
-                mr: 0.5,
-            }}>{length}</Typography>
-            <ChevronRight sx={{
-                fontSize: 30,
-                verticalAlign: 'middle', // ini bantu jaga posisi icon
-            }} color="action" />
+            {length != 0 &&
+                (<Typography sx={{
+                    fontSize: 12,
+                    lineHeight: 1,
+                    mr: 0.5,
+                }}>{length}</Typography>)
+            }
+            {action && (
+                <ChevronRight sx={{
+                    fontSize: 30,
+                    verticalAlign: 'middle', // ini bantu jaga posisi icon
+                }} color="action" />
+            )}
+
         </Box>
     )
 }

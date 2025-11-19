@@ -1,5 +1,5 @@
 import axios from "axios";
-import { Movie, Video, Images, Credits, TopCast, TopCastData, AwardNomination, AwardNominationStats, AwardNominationData } from "../types/Movie";
+import { Movie, Video, Images, Credits, TopCast, TopCastData, AwardNomination, AwardNominationStats, AwardNominationData, Interest, MovieInterest, BoxOffice } from "../types/Movie";
 
 const BASE_URL = "https://api.imdbapi.dev";
 
@@ -28,10 +28,14 @@ interface ApiGetCreditsResponse {
  * Fetch list of movies (supports pagination)
  * @param nextPageToken optional, for loading next pages
  */
-export const fetchMovies = async (nextPageToken?: string): Promise<ApiGetMovieResponse> => {
+export const fetchMovies = async (nextPageToken?: string, genres?: string): Promise<ApiGetMovieResponse> => {
+    let genre = ''
+    if(genre){
+        genre = `&genres=${genres}`
+    }
     const url = nextPageToken
-        ? `https://api.imdbapi.dev/titles?types=MOVIE&pageToken=${nextPageToken}`
-        : `https://api.imdbapi.dev/titles?types=MOVIE`;
+        ? `https://api.imdbapi.dev/titles?types=MOVIE&pageToken=${nextPageToken}${genre}`
+        : `https://api.imdbapi.dev/titles?types=MOVIE${genre}`;
 
     const res = await axios.get<ApiGetMovieResponse>(url)
 
@@ -78,6 +82,26 @@ export const fetchTopCast = async (id: string): Promise<TopCastData> => {
 
 export const fetchAwardNomination = async (id: string): Promise<AwardNomination> => {
     const res = await axios.get<AwardNomination>(`${BASE_URL}/titles/${id}/awardNominations`)
-    
+
+    return res.data
+}
+
+export const fetchInterests = async (interests: MovieInterest[]): Promise<Interest[]> => {
+    if (!interests || interests.length === 0) return [];
+
+    const data = await Promise.all(
+        interests.map(async (element) => {
+            const res = await axios.get<Interest>(`${BASE_URL}/interests/${element.id}`);
+            return res.data;
+        })
+    );
+
+    return data;
+}
+
+
+export const fetchBoxOffice = async (id: string): Promise<BoxOffice> => {
+    const res = await axios.get<BoxOffice>(`${BASE_URL}/titles/${id}/boxOffice`)
+
     return res.data
 }

@@ -22,4 +22,12 @@ const voteCount = (count: number) => {
     return count.toString();
 }
 
-export { duration, duration2, voteCount }
+const currency = (ammount: string, currency: string) => {
+    if (ammount == null) return '';
+    const cleaned = String(ammount).replace(/[^0-9.-]+/g, '');
+    const n = Number(cleaned);
+    if (!isFinite(n)) return '';
+    return new Intl.NumberFormat('en-US', { style: 'currency', currency: currency}).format(n);
+}
+
+export { duration, duration2, voteCount, currency }

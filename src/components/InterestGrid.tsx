@@ -1,13 +1,13 @@
 import { Box, Grid, Typography, useMediaQuery, useTheme } from "@mui/material";
-import { TopCast, Video } from "../types/Movie";
+import { Interest, MovieInterest, TopCast, Video } from "../types/Movie";
 
-export default function DynamicGrid({ topCast = [] }: { topCast: TopCast[] }) {
+export default function DynamicGrid({ interests = [] }: { interests: Interest[] }) {
     const theme = useTheme();
     const isSmUp = useMediaQuery(theme.breakpoints.up("sm"));
     const isSmDown = useMediaQuery(theme.breakpoints.down("sm"));
 
     // Jika tidak ada gambar, tidak render apa pun
-    if (!topCast.length) return null;
+    if (!interests.length) return null;
 
     // console.log(topCast.map(i=>i.primaryImage))
 
@@ -23,7 +23,7 @@ export default function DynamicGrid({ topCast = [] }: { topCast: TopCast[] }) {
                     "&::-webkit-scrollbar": { display: "none" },
                 }}
             >
-                {topCast.map((src2, j) => (
+                {interests.map((src2, j) => (
                     <Box
                         key={j}
                         sx={{
@@ -44,7 +44,6 @@ export default function DynamicGrid({ topCast = [] }: { topCast: TopCast[] }) {
                                 aspectRatio: "1 / 1",
                                 objectFit: "cover",
                                 borderRadius: 50,
-                                mb:1
                             }}
 
                         />
@@ -56,24 +55,10 @@ export default function DynamicGrid({ topCast = [] }: { topCast: TopCast[] }) {
                                 WebkitBoxOrient: "vertical",
                                 overflow: "hidden",
                                 textOverflow: "ellipsis",
-                                // fontSize: 14,
-                                fontWeight: 'bold'
+                                fontSize: 14,
                             }}
                         >
-                            {src2.displayName}
-                        </Typography>
-                        <Typography
-                            variant="caption"
-                            sx={{
-                                display: "-webkit-box",
-                                WebkitLineClamp: 2,
-                                WebkitBoxOrient: "vertical",
-                                overflow: "hidden",
-                                textOverflow: "ellipsis",
-                                // fontSize: 14,
-                            }}
-                        >
-                            {src2.characters?.[0]}
+                            {src2.name}
                         </Typography>
                     </Box>
                 ))}

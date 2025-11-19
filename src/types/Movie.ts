@@ -27,6 +27,11 @@ export interface MovieStar {
   displayName: string;
 }
 
+export interface Genre {
+  id: string;
+  displayName: string;
+}
+
 export interface Movie {
   id: string;
   type: string;
@@ -43,6 +48,33 @@ export interface Movie {
   directors?: MovieDirector[];
   writers?: MovieWriter[];
   stars?: MovieStar[];
+  interests?: MovieInterest[];
+  originCountries?: MovieOrigin[];
+  spokenLanguages?: Languages[];
+}
+
+export interface Languages {
+  code: string;
+  name: string;
+}
+
+export interface MovieOrigin {
+  code: string;
+  name: string;
+}
+
+export interface MovieInterest {
+  id: string;
+  name: string;
+}
+
+export interface Interest {
+  id: string;
+  name: string;
+  primaryImage: PrimaryImage;
+  description: string;
+  similarInterests: Interest[];
+  isSubGenre?: boolean
 }
 interface PrimaryImage {
   url: string;
@@ -77,6 +109,8 @@ export interface Data {
   realCountImg: number;
   topCast: TopCastData;
   awardNominationStats?: AwardNominationStats;
+  interests?: Interest[];
+  boxOffice?: BoxOffice;
 }
 
 export interface AwardNomination {
@@ -90,11 +124,11 @@ export interface AwardNominationStats {
 }
 
 export interface AwardNominationData {
-  nominees : Name;
-  event : Event;
-  year : number;
-  text : string;
-  category :string;
+  nominees: Name;
+  event: Event;
+  year: number;
+  text: string;
+  category: string;
   isWinner: boolean;
   winnerRank: number;
 }
@@ -126,6 +160,17 @@ export interface Name {
 }
 
 export interface TopCastData {
-    data: TopCast[]
-    totalCount: number
+  data: TopCast[]
+  totalCount: number
+}
+
+export interface BoxOffice {
+  worldwideGross: {
+    amount: string,
+    currency: string
+  },
+  productionBudget: {
+    amount: string,
+    currency: string
+  }
 }
