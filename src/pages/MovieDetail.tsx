@@ -65,9 +65,9 @@ export default function MovieDetail() {
     <Container sx={{ py: 4 }}>
       <HeroBanner data={data} />
       <AwardNomination data={data.awardNominationStats!} />
-      <Videos length={data.countVid} videos={data.videos} />
-      <Photos length={data.realCountImg} images={data.images} />
-      <TopCast topCast={data.topCast.data} length={data.topCast.totalCount} />
+      <Videos length={data.countVid!} videos={data.videos!} />
+      <Photos length={data.realCountImg!} images={data.images!} />
+      <TopCast topCast={data?.topCast?.data!} length={data?.topCast?.totalCount!} />
       <Etc movie={data.movie} />
       <Details movie={data.movie} />
       <BoxOffice boxOffice={data.boxOffice!} />

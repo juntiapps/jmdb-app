@@ -102,12 +102,12 @@ export interface Images {
 
 export interface Data {
   movie: Movie | null;
-  videos: Video[];
-  images: Images[];
-  countVid: number;
-  countImg: string;
-  realCountImg: number;
-  topCast: TopCastData;
+  videos?: Video[];
+  images?: Images[];
+  countVid?: number;
+  countImg?: string;
+  realCountImg?: number;
+  topCast?: TopCastData;
   awardNominationStats?: AwardNominationStats;
   interests?: Interest[];
   boxOffice?: BoxOffice;

@@ -13,7 +13,7 @@ export default function HeroBanner({ data }: { data: Data }) {
     const { movie, videos, images, countImg, countVid } = data;
 
     const posterUrl = movie?.primaryImage?.url ?? "https://placehold.co/300x450";
-    const trailer = videos.filter(i => i.name.toLowerCase().includes('trailer'))[0];
+    const trailer = videos?.filter(i => i.name.toLowerCase().includes('trailer'))[0];
     const trailerImg = trailer?.primaryImage?.url ?? "https://placehold.co/450x300";
 
     return (
@@ -92,17 +92,17 @@ export default function HeroBanner({ data }: { data: Data }) {
                         <PlayOverlay
                             show={{ xs: "none", md: "flex" }}
                             text="Play trailer"
-                            duration={duration2(trailer?.runtimeSeconds)}
+                            duration={duration2(trailer?.runtimeSeconds!)}
                         />
 
                         {/* Mobile play overlay */}
                         <PlayCenterOverlay show={{ xs: "flex", md: "none" }} text="Play trailer"
-                            duration={duration2(trailer?.runtimeSeconds)} />
+                            duration={duration2(trailer?.runtimeSeconds!)} />
                     </Link>
                 </Grid>
 
                 {/* Counts (videos & photos) */}
-                <StatsPanel countVid={countVid} countImg={countImg} />
+                <StatsPanel countVid={countVid!} countImg={countImg!} />
             </Grid>
 
             {/* --- Description --- */}

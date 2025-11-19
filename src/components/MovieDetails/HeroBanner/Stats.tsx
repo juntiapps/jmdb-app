@@ -1,8 +1,10 @@
 import { PhotoLibrary, VideoLibrary } from "@mui/icons-material";
 import { Box, Grid, Typography } from "@mui/material";
+import { Navigate, useNavigate } from "react-router-dom";
 
 
 function StatsPanel({ countVid, countImg }: { countVid: number; countImg: string }) {
+    const navigate = useNavigate();
     const panelStyle = (theme: any) => ({
         flex: "1 1 auto",
         borderRadius: 4,
@@ -11,7 +13,12 @@ function StatsPanel({ countVid, countImg }: { countVid: number; countImg: string
                 ? theme.palette.grey[800]
                 : theme.palette.grey[300],
         height: { lg: 333, xs: "auto" },
+        cursor: 'pointer'
     });
+
+    const onClick = (to: string) => {
+        navigate(to)
+    }
 
     return (
         <Grid
@@ -28,6 +35,7 @@ function StatsPanel({ countVid, countImg }: { countVid: number; countImg: string
                 icon={<VideoLibrary fontSize="inherit" />}
                 count={`${countVid} VIDEOS`}
                 sx={panelStyle}
+                onClick={() => onClick('videogallery')}
             />
 
             {/* Photos box */}
@@ -35,6 +43,7 @@ function StatsPanel({ countVid, countImg }: { countVid: number; countImg: string
                 icon={<PhotoLibrary fontSize="inherit" />}
                 count={`${countImg} PHOTOS`}
                 sx={panelStyle}
+                onClick={() => onClick('photogallery')}
             />
         </Grid>
     );
@@ -44,13 +53,15 @@ function StatsItem({
     icon,
     count,
     sx,
+    onClick
 }: {
     icon: React.ReactNode;
     count: string;
     sx: any;
+    onClick: () => void
 }) {
     return (
-        <Grid container sx={sx} alignItems="center" justifyContent="center" p={1}>
+        <Grid container sx={sx} alignItems="center" justifyContent="center" p={1} onClick={onClick}>
             <Grid container direction={{ xs: "row", lg: "column" }} gap={1} alignItems="center">
                 <Box sx={{ fontSize: { xs: 16, lg: 35 }, display: "flex" }}>{icon}</Box>
                 <Typography variant="caption">{count}</Typography>

@@ -1,70 +1,109 @@
-import React, { useState } from "react";
-import { AppBar, Toolbar, Typography, IconButton, Box, Button, TextField, InputAdornment } from "@mui/material";
-import { Brightness4, Brightness7, Search } from "@mui/icons-material";
-import { useColorMode } from "../theme/ThemeContext";
-import { Link, useNavigate } from "react-router-dom";
+import React from 'react'
+import { Movie } from '../types/Movie'
+import { Typography, Box, useTheme, Container, Grid } from '@mui/material'
+import { ChevronLeft } from '@mui/icons-material'
+import { useNavigate } from 'react-router-dom'
+import { useColorMode } from '../theme/ThemeContext'
 
-const Header: React.FC = () => {
-    const { mode, toggleMode } = useColorMode();
-
-    const [query, setQuery] = useState("");
-    const navigate = useNavigate();
-
-    const handleSubmit = (e: React.FormEvent) => {
-        e.preventDefault();
-        if (query.trim()) {
-            navigate(`/search?q=${encodeURIComponent(query.trim())}`);
-        }
-    };
+export default function Header({ movie }: { movie: Movie }) {
+    const { mode } = useColorMode()
+    const title = movie.primaryTitle
+    const page = 'Video'
+    const bg = movie.primaryImage?.url // ganti sesuai field
+    const navigate = useNavigate()
 
     return (
-        <AppBar position="sticky" elevation={2}>
-            <Toolbar sx={{ display: "flex", justifyContent: "space-between" }}>
-                <Typography
-                    variant="h6"
-                    component={Link}
-                    to="/"
-                    sx={{
-                        textDecoration: "none",
-                        fontWeight: "bold",
-                        color: mode === "light" ? "#000" : "#f5c518",
-                        mr:1
-                    }}
-                >
-                    JMDb
-                </Typography>
+        <Box
+            sx={{
+                position: 'relative',
+                overflow: 'hidden',
+                p: 2,
+                minHeight: 150,
 
-                {/* Search Bar */}
-                <Box
-                    component="form"
-                    onSubmit={handleSubmit}
-                    sx={{ flexGrow: 1, maxWidth: 400 }}
-                >
-                    <TextField
-                        size="small"
-                        fullWidth
-                        placeholder="Search movies..."
-                        variant="outlined"
-                        value={query}
-                        onChange={(e) => setQuery(e.target.value)}
-                        InputProps={{
-                            startAdornment: (
-                                <InputAdornment position="start">
-                                    <Search color="action" />
-                                </InputAdornment>
-                            ),
+                // Background image
+                backgroundImage: `url(${bg})`,
+                backgroundSize: 'cover',
+                backgroundRepeat: 'no-repeat',
+                backgroundPosition: 'center',
+
+                // Blur & Saturate overlay
+                '&::before': {
+                    content: '""',
+                    position: 'absolute',
+                    inset: 0,
+                    backdropFilter: 'blur(50px) saturate(1)', // saturate(2) = 200%
+                    WebkitBackdropFilter: 'blur(50px) saturate(1)',
+                    background: mode === 'dark' ? 'rgba(71,71,71,0.5)' : undefined
+                }
+            }}
+        >
+            <Container sx={{ px: 0 }}>
+
+                {/* CONTENT */}
+                <Box sx={{ position: 'relative', zIndex: 10 }}>
+
+                    {/* Back Button */}
+                    <Box
+                        onClick={() => navigate(-1)}
+                        sx={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: 0.5,
+                            cursor: 'pointer',
+                            // color: 'white',
+                            fontWeight: 'bold',
+                            userSelect: 'none',
+                            mb: 3
                         }}
-                    />
-                </Box>
+                    >
+                        <ChevronLeft />
+                        <Typography>Back</Typography>
+                    </Box>
 
-                <Box display="flex" alignItems="center" gap={2}>
-                    <IconButton onClick={toggleMode} color="inherit">
-                        {mode === "dark" ? <Brightness7 /> : <Brightness4 />}
-                    </IconButton>
-                </Box>
-            </Toolbar>
-        </AppBar>
-    );
-};
 
-export default Header;
+                    <Box sx={{
+                        display: 'flex',
+                        flexDirection: 'row',
+                        gap: 2
+                    }}>
+                        <Box
+                            component='img'
+                            src={bg}
+                            sx={{
+                                aspectRatio: '2/3',
+                                width: '17.25%',
+                                borderRadius: '8px',
+                                display: 'flex',
+                                "@media (max-width:479px)": { display: 'none' },
+
+                            }}
+                        />
+                        <Box sx={{ flexDirection: 'column', display: 'flex', width: '100%' }}>
+                            {/* Title */}
+                            <Typography sx={{
+                                fontWeight: 'bold',
+                                fontSize: '20px',
+                                "@media (max-width:479px)": { fontSize: '16px' },
+                                display: 'flex',
+                                flex: 1,
+                                alignItems: 'end',
+                            }}>
+                                {title}
+                            </Typography>
+
+                            {/* Page label */}
+                            <Typography sx={{
+                                fontWeight: 'bold',
+                                fontSize: { xs: '28px', sm: '42px' }
+                            }}>
+                                {page}
+                            </Typography>
+                        </Box>
+
+                    </Box>
+
+                </Box>
+            </Container>
+        </Box>
+    )
+}
