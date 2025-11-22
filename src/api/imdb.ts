@@ -12,6 +12,7 @@ interface ApiGetMovieResponse {
 interface ApiGetVideoResponse {
     videos: Video[];
     totalCount: number;
+    nextPageToken?: string;
 }
 
 interface ApiGetImagesResponse {
@@ -30,7 +31,7 @@ interface ApiGetCreditsResponse {
  */
 export const fetchMovies = async (nextPageToken?: string, genres?: string): Promise<ApiGetMovieResponse> => {
     let genre = ''
-    if(genre){
+    if (genre) {
         genre = `&genres=${genres}`
     }
     const url = nextPageToken
@@ -52,8 +53,42 @@ export const searchMovies = async (query: string): Promise<Movie[]> => {
     return res.data.titles;
 };
 
-export const fetchVideos = async (id: string): Promise<ApiGetVideoResponse> => {
-    const res = await axios.get<ApiGetVideoResponse>(`${BASE_URL}/titles/${id}/videos`)
+// export const fetchVideos = async (id: string): Promise<ApiGetVideoResponse> => {
+//     const res = await axios.get<ApiGetVideoResponse>(`${BASE_URL}/titles/${id}/videos`)
+//     return res.data
+// }
+
+// export const fetchVideos = async (id: string, types?: string, nextPageToken?: string): Promise<ApiGetVideoResponse> => {
+//     let typeQuery = types!=='all' ? `types=${types}` : "";
+
+//     const url = nextPageToken
+//         ? `${BASE_URL}/titles/${id}/videos?${typeQuery}&pageToken=${nextPageToken}`
+//         : `${BASE_URL}/titles/${id}/videos?${typeQuery}`;
+
+//     // Hapus & jika parameter kosong
+//     const cleanUrl = url.replace(/\?&/, "?").replace(/&$/, "");
+
+//     console.log("URL:", cleanUrl,'query',typeQuery);
+
+//     const res = await axios.get<ApiGetVideoResponse>(cleanUrl);
+
+//     return res.data
+// }
+export const fetchVideos = async (id: string, types?: string, nextPageToken?: string): Promise<ApiGetVideoResponse> => {
+    console.log(typeof types)
+    let typeQuery = types!==undefined ? `types=${types}` : "";
+
+    const url = nextPageToken
+        ? `${BASE_URL}/titles/${id}/videos?${typeQuery}&pageToken=${nextPageToken}`
+        : `${BASE_URL}/titles/${id}/videos?${typeQuery}`;
+
+    // Hapus & jika parameter kosong
+    const cleanUrl = url.replace(/\?&/, "?").replace(/&$/, "");
+
+    // console.log("URL:", cleanUrl,'query',typeQuery);
+
+    const res = await axios.get<ApiGetVideoResponse>(cleanUrl);
+
     return res.data
 }
 

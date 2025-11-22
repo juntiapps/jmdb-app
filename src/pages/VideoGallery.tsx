@@ -2,26 +2,25 @@ import React from 'react'
 import { useNavigate, useParams } from 'react-router-dom';
 import Header from '../components/Header';
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
-import { Data } from '../types/Movie';
+import { Data, Video } from '../types/Movie';
 import { fetchVideos, getMovieById } from '../api/imdb';
 import { Box, CircularProgress, Container } from '@mui/material';
+import DataGrid from '../components/VideoGallery/VideoListGrid';
+import Pagination from '../components/Filter';
 
 export default function VideoGallery() {
     const { id } = useParams<{ id: string }>();
-    const navigate = useNavigate()
 
     const { data, isLoading } = useQuery({
         queryKey: ["movie-detail", id],
         queryFn: async (): Promise<Data> => {
-            const [movie, videoData] = await Promise.all([
+            const [movie] = await Promise.all([
                 getMovieById(id!),
-                fetchVideos(id!),
+                // fetchVideos(id!),
             ]);
 
             return {
                 movie,
-                videos: videoData.videos || [],
-                countVid: videoData.totalCount || 0,
             };
         },
         enabled: !!id,
@@ -37,6 +36,9 @@ export default function VideoGallery() {
     }
 
     return (
-        <Header movie={data.movie} />
+        <>
+            <Header movie={data.movie} page='Video' />
+            <DataGrid id={id!}/>
+        </>
     )
 }

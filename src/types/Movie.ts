@@ -174,3 +174,18 @@ export interface BoxOffice {
     currency: string
   }
 }
+
+export interface PageInfoTypes {
+  from: number;
+  to: number;
+  total: number
+}
+
+export interface FilterTypes {
+
+}
+
+export interface SortTypes {
+  sortOrder: "asc" | "desc";
+  setSortOrder: (value: "asc" | "desc") => void;
+}

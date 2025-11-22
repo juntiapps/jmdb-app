@@ -5,10 +5,15 @@ import { ChevronLeft } from '@mui/icons-material'
 import { useNavigate } from 'react-router-dom'
 import { useColorMode } from '../theme/ThemeContext'
 
-export default function Header({ movie }: { movie: Movie }) {
+interface HeaderProps {
+    movie: Movie,
+    page: string,
+}
+
+export default function Header<T>({ movie, page }: HeaderProps) {
     const { mode } = useColorMode()
     const title = movie.primaryTitle
-    const page = 'Video'
+    // const page = 'Video'
     const bg = movie.primaryImage?.url // ganti sesuai field
     const navigate = useNavigate()
 
@@ -44,7 +49,7 @@ export default function Header({ movie }: { movie: Movie }) {
 
                     {/* Back Button */}
                     <Box
-                        onClick={() => navigate(-1)}
+                        onClick={() => navigate('/movie/' + movie.id)}
                         sx={{
                             display: 'flex',
                             alignItems: 'center',
@@ -53,7 +58,8 @@ export default function Header({ movie }: { movie: Movie }) {
                             // color: 'white',
                             fontWeight: 'bold',
                             userSelect: 'none',
-                            mb: 3
+                            mb: 3,
+                            ml: -1
                         }}
                     >
                         <ChevronLeft />
