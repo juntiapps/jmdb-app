@@ -18,6 +18,7 @@ interface ApiGetVideoResponse {
 interface ApiGetImagesResponse {
     images: Images[];
     totalCount: number;
+    nextPageToken?: string;
 }
 
 interface ApiGetCreditsResponse {
@@ -75,7 +76,7 @@ export const searchMovies = async (query: string): Promise<Movie[]> => {
 //     return res.data
 // }
 export const fetchVideos = async (id: string, types?: string, nextPageToken?: string): Promise<ApiGetVideoResponse> => {
-    console.log(typeof types)
+  
     let typeQuery = types!==undefined ? `types=${types}` : "";
 
     const url = nextPageToken
@@ -92,10 +93,28 @@ export const fetchVideos = async (id: string, types?: string, nextPageToken?: st
     return res.data
 }
 
-export const fetchImages = async (id: string): Promise<ApiGetImagesResponse> => {
-    const res = await axios.get<ApiGetImagesResponse>(`${BASE_URL}/titles/${id}/images`)
+export const fetchImages = async (id: string, types?: string, nextPageToken?: string): Promise<ApiGetImagesResponse> => {
+    
+    let typeQuery = types!==undefined ? `types=${types}` : "";
+
+    const url = nextPageToken
+        ? `${BASE_URL}/titles/${id}/images?${typeQuery}&pageToken=${nextPageToken}`
+        : `${BASE_URL}/titles/${id}/images?${typeQuery}`;
+
+    // Hapus & jika parameter kosong
+    const cleanUrl = url.replace(/\?&/, "?").replace(/&$/, "");
+
+    // console.log("URL:", cleanUrl,'query',typeQuery);
+
+    const res = await axios.get<ApiGetImagesResponse>(cleanUrl);
+
     return res.data
 }
+
+// export const fetchImages = async (id: string): Promise<ApiGetImagesResponse> => {
+//     const res = await axios.get<ApiGetImagesResponse>(`${BASE_URL}/titles/${id}/images`)
+//     return res.data
+// }
 
 export const fetchTopCast = async (id: string): Promise<TopCastData> => {
     const res = await axios.get<ApiGetCreditsResponse>(`${BASE_URL}/titles/${id}/credits`)

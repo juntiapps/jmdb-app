@@ -1,5 +1,5 @@
 import React from 'react'
-import { FilterTypes, PageInfoTypes, SortTypes } from '../types/Movie'
+import { PageInfoTypes, SortTypes } from '../types/Movie'
 import { Box, Chip, FormControl, Grid, IconButton, InputLabel, MenuItem, Select } from '@mui/material'
 import FilterListIcon from "@mui/icons-material/FilterList";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
@@ -13,7 +13,7 @@ export default function Filter({
   onOpenFilter
 }: {
   pageInfo: PageInfoTypes,
-  sort: SortTypes,
+  sort?: SortTypes,
   onOpenFilter: () => void
 }) {
 
@@ -44,28 +44,32 @@ export default function Filter({
               "& .MuiChip-icon": { color: "white" }
             }}
           />
+          {sort && (
+            <>
+              Sort by Duration
 
-          Sort by Duration
+              {/* Sort Order Toggle */}
+              <IconButton
+                onClick={() =>
+                  sort.setSortOrder(sort.sortOrder === "asc" ? "desc" : "asc")
+                }
+                sx={{
+                  color: "info.main",
+                  background: "rgba(255,255,255,0.1)",
+                  "&:hover": {
+                    background: "rgba(255,255,255,0.2)"
+                  }
+                }}
+              >
+                {sort.sortOrder === "desc" ? (
+                  <ArrowDownwardIcon />
+                ) : (
+                  <ArrowUpwardIcon />
+                )}
+              </IconButton>
+            </>
+          )}
 
-          {/* Sort Order Toggle */}
-          <IconButton
-            onClick={() =>
-              sort.setSortOrder(sort.sortOrder === "asc" ? "desc" : "asc")
-            }
-            sx={{
-              color: "info.main",
-              background: "rgba(255,255,255,0.1)",
-              "&:hover": {
-                background: "rgba(255,255,255,0.2)"
-              }
-            }}
-          >
-            {sort.sortOrder === "desc" ? (
-              <ArrowDownwardIcon />
-            ) : (
-              <ArrowUpwardIcon />
-            )}
-          </IconButton>
         </Box>
       </Grid>
     </Grid>

@@ -181,8 +181,9 @@ export interface PageInfoTypes {
   total: number
 }
 
-export interface FilterTypes {
-
+export interface Photo {
+  url: string;
+  type: string
 }
 
 export interface SortTypes {

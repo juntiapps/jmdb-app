@@ -5,10 +5,9 @@ import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import { Data, Video } from '../types/Movie';
 import { fetchVideos, getMovieById } from '../api/imdb';
 import { Box, CircularProgress, Container } from '@mui/material';
-import DataGrid from '../components/VideoGallery/VideoListGrid';
-import Pagination from '../components/Filter';
+import DataGrid from '../components/PhotoGallery/PhotoListGrid';
 
-export default function VideoGallery() {
+export default function PhotoGallery() {
     const { id } = useParams<{ id: string }>();
 
     const { data, isLoading } = useQuery({
@@ -37,7 +36,7 @@ export default function VideoGallery() {
 
     return (
         <>
-            <Header movie={data.movie} page='Videos' />
+            <Header movie={data.movie} page='Photos' />
             <DataGrid id={id!}/>
         </>
     )

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { AwardNominationStats } from '../../types/Movie'
 import SectionTitle from '../SectionTitle'
 import { Box, Grid, Typography, useTheme } from '@mui/material'
@@ -6,12 +6,18 @@ import { ChevronRight } from '@mui/icons-material';
 
 export default function AwardNomination({ data }: { data: AwardNominationStats }) {
     const theme = useTheme();
+    const [string, setString] = useState('')
 
-    let string = data.winCount + " win"
-    if (data.winCount > 1) string += "s"
-    string += " & " + data.nominationCount + " nomination"
-    if (data.nominationCount > 1) string += "s"
-    string += " total"
+    useEffect(() => {
+        if (data) {
+            let str = data.winCount + " win"
+            if (data.winCount > 1) str += "s"
+            str += " & " + data.nominationCount + " nomination"
+            if (data.nominationCount > 1) str += "s"
+            str += " total"
+            setString(str)
+        }
+    }, [])
 
 
     return (
