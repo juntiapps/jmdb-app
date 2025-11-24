@@ -1,5 +1,6 @@
 import { Box, Grid, Typography, useMediaQuery, useTheme } from "@mui/material";
 import { Images } from "../types/Movie";
+import { useNavigate } from "react-router-dom";
 
 export default function DynamicGrid({
   images = [],
@@ -10,6 +11,7 @@ export default function DynamicGrid({
 }) {
   const theme = useTheme();
   const isSmDown = useMediaQuery(theme.breakpoints.down("sm"));
+  const navigate = useNavigate()
 
   if (!images.length) return null;
 
@@ -47,7 +49,9 @@ export default function DynamicGrid({
               width: i === 6 ? 100 : undefined,
               height: i < 3 ? "calc(100vw * 0.2)" : undefined,
               display: isSmDown && i === 6 ? "none" : undefined,
+              cursor: "pointer",
             }}
+            onClick={() => i === 6 ? navigate('photogallery') : navigate('photogallery?q=' + src.url)}
           >
             <Box
               component="img"

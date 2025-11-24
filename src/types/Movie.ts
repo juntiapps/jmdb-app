@@ -76,6 +76,11 @@ export interface Interest {
   similarInterests: Interest[];
   isSubGenre?: boolean
 }
+
+export interface Categories {
+  category: string;
+  interests: Interest[];
+}
 interface PrimaryImage {
   url: string;
   width: number;

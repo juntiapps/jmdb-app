@@ -1,4 +1,4 @@
-import { Box, useTheme } from '@mui/material'
+import { Box, CircularProgress, useTheme } from '@mui/material'
 import { useEffect, useRef, useState } from 'react'
 import { Images } from '../../types/Movie'
 
@@ -65,7 +65,7 @@ function useContainerWidth() {
 }
 
 
-export default function PhotoList({ photos }: { photos: Images[] }) {
+export default function PhotoList({ photos, onClickPhoto }: { photos: Images[], onClickPhoto: (photo: Images) => void }) {
     const theme = useTheme();
     const rows = chunkImagesByRow(photos)
     const [containerRef, containerWidth] = useContainerWidth();
@@ -96,8 +96,11 @@ export default function PhotoList({ photos }: { photos: Images[] }) {
                                     width: widths[idx],
                                     height: finalHeight,
                                     flex: "0 0 auto",
-                                    borderInline:  `4px solid ${theme.palette.background.default}`
+                                    borderInline: `4px solid ${theme.palette.background.default}`,
+                                    cursor: "pointer",
+                                    position: "relative",
                                 }}
+                                onClick={() => onClickPhoto(img)}
                             >
                                 <Box
                                     component="img"

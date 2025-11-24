@@ -6,6 +6,9 @@ export default function DynamicGrid({ images = [] }: { images: Video[] }) {
   const isSmUp = useMediaQuery(theme.breakpoints.up("sm"));
   const isSmDown = useMediaQuery(theme.breakpoints.down("sm"));
 
+  const forwardtoImdb = (id: string) => {
+    window.open(`https://www.imdb.com/video/${id}`, "_blank");
+  }
   // Jika tidak ada gambar, tidak render apa pun
   if (!images.length) return null;
 
@@ -58,7 +61,9 @@ export default function DynamicGrid({ images = [] }: { images: Video[] }) {
                       display: "flex",
                       flexDirection: "column",
                       gap: 0.5,
+                      cursor: "pointer",
                     }}
+                    onClick={() => forwardtoImdb(src2.id)}
                   >
                     <Box
                       component="img"
@@ -93,7 +98,7 @@ export default function DynamicGrid({ images = [] }: { images: Video[] }) {
         }
         if (isSmDown && i > 0) return null;
         return (
-          <Grid key={i} size={{ xs: xsVal }}>
+          <Grid key={i} size={{ xs: xsVal }} onClick={() => forwardtoImdb(src.id)} sx={{ cursor: "pointer" }}>
             <Box
               component="img"
               src={src.primaryImage.url}

@@ -1,5 +1,5 @@
 import axios from "axios";
-import { Movie, Video, Images, Credits, TopCast, TopCastData, AwardNomination, AwardNominationStats, AwardNominationData, Interest, MovieInterest, BoxOffice } from "../types/Movie";
+import { Movie, Video, Images, Credits, TopCast, TopCastData, AwardNomination, AwardNominationStats, AwardNominationData, Interest, MovieInterest, BoxOffice, Categories } from "../types/Movie";
 
 const BASE_URL = "https://api.imdbapi.dev";
 
@@ -24,6 +24,10 @@ interface ApiGetImagesResponse {
 interface ApiGetCreditsResponse {
     credits: Credits[];
     totalCount: number;
+}
+
+interface ApiGetInterestsResponse {
+    categories: Categories[]
 }
 
 /**
@@ -76,8 +80,8 @@ export const searchMovies = async (query: string): Promise<Movie[]> => {
 //     return res.data
 // }
 export const fetchVideos = async (id: string, types?: string, nextPageToken?: string): Promise<ApiGetVideoResponse> => {
-  
-    let typeQuery = types!==undefined ? `types=${types}` : "";
+
+    let typeQuery = types !== undefined ? `types=${types}` : "";
 
     const url = nextPageToken
         ? `${BASE_URL}/titles/${id}/videos?${typeQuery}&pageToken=${nextPageToken}`
@@ -94,8 +98,8 @@ export const fetchVideos = async (id: string, types?: string, nextPageToken?: st
 }
 
 export const fetchImages = async (id: string, types?: string, nextPageToken?: string): Promise<ApiGetImagesResponse> => {
-    
-    let typeQuery = types!==undefined ? `types=${types}` : "";
+
+    let typeQuery = types !== undefined ? `types=${types}` : "";
 
     const url = nextPageToken
         ? `${BASE_URL}/titles/${id}/images?${typeQuery}&pageToken=${nextPageToken}`
@@ -140,17 +144,11 @@ export const fetchAwardNomination = async (id: string): Promise<AwardNomination>
     return res.data
 }
 
-export const fetchInterests = async (interests: MovieInterest[]): Promise<Interest[]> => {
-    if (!interests || interests.length === 0) return [];
+export const fetchInterests = async (): Promise<Categories[]> => {
+    const res = await axios.get<ApiGetInterestsResponse>(`${BASE_URL}/interests`)
 
-    const data = await Promise.all(
-        interests.map(async (element) => {
-            const res = await axios.get<Interest>(`${BASE_URL}/interests/${element.id}`);
-            return res.data;
-        })
-    );
-
-    return data;
+    console.log(res.data.categories[0])
+    return res.data.categories
 }
 
 

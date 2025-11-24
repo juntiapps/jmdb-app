@@ -11,6 +11,8 @@ import CloseIcon from '@mui/icons-material/Close';
 import Typography from '@mui/material/Typography';
 import PhotoList from './PhotoList';
 import { fetchValidImages } from '../../utils/fetchValidImages';
+import PhotoViewer from './PhotoViewer';
+import { useSearchParams } from 'react-router-dom';
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
     '& .MuiDialogContent-root': { padding: theme.spacing(2) },
@@ -19,15 +21,21 @@ const BootstrapDialog = styled(Dialog)(({ theme }) => ({
 }));
 
 export default function DataGrid({ id }: { id: string }) {
+    const [searchParams] = useSearchParams();
+    const query = searchParams.get("q") || "";
+
     const [photos, setPhotos] = useState<Images[]>([]);
     const [pageToken, setPageToken] = useState<string | null>(null);
     const [nextPageToken, setNextPageToken] = useState<string | null>(null);
     const [pageInfo, setPageInfo] = useState<PageInfoTypes>({ from: 0, to: 0, total: 0 });
     const [showFilter, setShowFilter] = useState<boolean>(false);
+    const [showViewer, setShowViewer] = useState<boolean>(false);
     const [selectedType, setSelectedType] = useState<string>('all');
     const [loading, setLoading] = useState<boolean>(true);
     const [loadingMore, setLoadingMore] = useState<boolean>(false);
     const [isFiltering, setIsFiltering] = useState<boolean>(false);
+    const [selectedPhoto, setSelectedPhoto] = useState<Images | null>(null);
+
     // Filter yang dikirim ke API
     const filterType = selectedType === 'all' ? undefined : selectedType;
 
@@ -57,7 +65,7 @@ export default function DataGrid({ id }: { id: string }) {
 
         try {
             const data = await fetchImages(id, filterType, isLoadMore ? pageToken || undefined : undefined);
-            const validImages = await fetchValidImages(data.images,20)
+            const validImages = await fetchValidImages(data.images, 20)
 
             setPhotos(prev => {
                 const newList = isLoadMore ? [...prev, ...(validImages || [])] : (validImages || []);
@@ -92,8 +100,11 @@ export default function DataGrid({ id }: { id: string }) {
         setPageToken(null);
         setNextPageToken(null);
         loadPhotos(false);
+        if (query) {
+            onClickPhoto({ url: query, width: 1920, height: 1080, type: 'custom' });
+        }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [id, filterType]);
+    }, [id, filterType, query]);
 
     // Load more
     const loadMore = () => {
@@ -114,11 +125,22 @@ export default function DataGrid({ id }: { id: string }) {
         // setShowFilter(false);
     };
 
-    return (
+    const onClickPhoto = (photo: Images) => {
+        setSelectedPhoto(photo);
+        setShowViewer(true);
+    }
+
+    return (<>
         <Container sx={{ py: 4 }}>
             <Filter pageInfo={pageInfo} onOpenFilter={onHandleFilter} />
 
-            <PhotoList photos={photos} />
+            {loading ? (
+                <Box display="flex" justifyContent="center" mt={4}>
+                    <CircularProgress />
+                </Box>
+            ) : (
+                <PhotoList photos={photos} onClickPhoto={onClickPhoto} />
+            )}
 
             {nextPageToken && (
                 <Box display="flex" justifyContent="center" mt={4}>
@@ -153,19 +175,22 @@ export default function DataGrid({ id }: { id: string }) {
 
                     <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1 }}>
                         {isFiltering ? <CircularProgress /> : typeList.map(item => {
-                            const label = item.type.replaceAll("_"," ")
-                            return(
-                            <Chip
-                                key={item.type}
-                                label={`${label} · ${item.count}`}
-                                onClick={() => { onSelectType(item.type) }}
-                                color={selectedType === item.type ? "primary" : "default"}
-                                sx={{ textTransform: 'capitalize', cursor: 'pointer' }}
-                            />
-                        )})}
+                            const label = item.type.replaceAll("_", " ")
+                            return (
+                                <Chip
+                                    key={item.type}
+                                    label={`${label} · ${item.count}`}
+                                    onClick={() => { onSelectType(item.type) }}
+                                    color={selectedType === item.type ? "primary" : "default"}
+                                    sx={{ textTransform: 'capitalize', cursor: 'pointer' }}
+                                />
+                            )
+                        })}
                     </Box>
                 </DialogContent>
             </BootstrapDialog>
         </Container>
+        {selectedPhoto && <PhotoViewer photo={selectedPhoto!} open={showViewer} setOpen={setShowViewer} />}
+    </>
     );
 }
