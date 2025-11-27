@@ -73,7 +73,7 @@ export interface Interest {
   name: string;
   primaryImage: PrimaryImage;
   description: string;
-  similarInterests: Interest[];
+  similarInterests?: Interest[];
   isSubGenre?: boolean
 }
 

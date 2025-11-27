@@ -18,8 +18,8 @@ export default function AppRoutes() {
                 <Route path="/movie/:id" element={<MovieDetail />} />
                 <Route path="/movie/:id/videogallery" element={<VideoGallery />} />
                 <Route path="/movie/:id/photogallery" element={<PhotoGallery />} />
-                <Route path="/interests" element={<Interests />} />
-                <Route path="/interests/:id" element={<InterestDetail />} />
+                <Route path="/interest" element={<Interests />} />
+                <Route path="/interest/:id" element={<InterestDetail />} />
                 <Route path="/search" element={<SearchResults />} />
 
                 {/* Fallback 404 */}

@@ -1,7 +1,7 @@
 import { ChevronRight } from '@mui/icons-material'
 import { Box, Typography, useTheme } from '@mui/material'
 
-export default function SectionTitle({ title = "", length = 0, action = true }) {
+export default function SectionTitle({ title = "", length = 0, action = true, bottomMargin = true }) {
     const theme = useTheme()
     return (
         <Box sx={{
@@ -11,7 +11,7 @@ export default function SectionTitle({ title = "", length = 0, action = true }) 
             borderLeft: (theme) => `4px solid ${theme.palette.primary.main}`,
             px: 1,
             mt: 7,
-            mb: 3
+            mb: bottomMargin ? 3 : 1
         }}>
             <Typography sx={{
                 fontSize: { xs: 18, sm: 22 },

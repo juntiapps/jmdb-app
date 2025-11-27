@@ -30,6 +30,12 @@ interface ApiGetInterestsResponse {
     categories: Categories[]
 }
 
+interface InterestPageResponse {
+    topRated: Movie[];
+    popular: Movie[];
+    count: number;
+}
+
 /**
  * Fetch list of movies (supports pagination)
  * @param nextPageToken optional, for loading next pages
@@ -147,9 +153,29 @@ export const fetchAwardNomination = async (id: string): Promise<AwardNomination>
 export const fetchInterests = async (): Promise<Categories[]> => {
     const res = await axios.get<ApiGetInterestsResponse>(`${BASE_URL}/interests`)
 
-    console.log(res.data.categories[0])
     return res.data.categories
 }
+
+export const getInterestById = async (id: string): Promise<Interest> => {
+    const res = await axios.get<Interest>(`${BASE_URL}/interests/${id}`)
+
+    return res.data
+}
+
+export const fetchMovieByInterest = async (interestId: string): Promise<InterestPageResponse> => {
+    const params = `types=MOVIE&interestIds=${interestId}`;
+    
+    const [res, res2] = await Promise.all([
+        axios.get<ApiGetMovieResponse>(`${BASE_URL}/titles?${params}&sortBy=SORT_BY_POPULARITY&sortOrder=ASC`),
+        axios.get<ApiGetMovieResponse>(`${BASE_URL}/titles?${params}&sortBy=SORT_BY_USER_RATING_COUNT&sortOrder=DESC`)
+    ]);
+
+    return {
+        popular: res.data.titles,
+        topRated: res2.data.titles,
+        count: res.data.totalCount
+    };
+};
 
 
 export const fetchBoxOffice = async (id: string): Promise<BoxOffice> => {

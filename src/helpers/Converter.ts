@@ -22,12 +22,21 @@ const voteCount = (count: number) => {
     return count.toString();
 }
 
-const currency = (ammount: string, currency: string) => {
+const currency = (ammount: string | number | null, currency: string) => {
     if (ammount == null) return '';
     const cleaned = String(ammount).replace(/[^0-9.-]+/g, '');
     const n = Number(cleaned);
     if (!isFinite(n)) return '';
-    return new Intl.NumberFormat('en-US', { style: 'currency', currency: currency}).format(n);
-}
+    return new Intl.NumberFormat('en-US', { style: 'currency', currency }).format(n);
+};
 
-export { duration, duration2, voteCount, currency }
+const numberWithCommas = (value: string | number | null) => {
+    if (value == null) return '';
+    const cleaned = String(value).replace(/[^0-9.-]+/g, '');
+    if (cleaned === '' || !isFinite(Number(cleaned))) return '';
+    const [intPart, decPart] = cleaned.split('.');
+    const withCommas = intPart.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    return decPart !== undefined ? `${withCommas}.${decPart}` : withCommas;
+};
+
+export { duration, duration2, voteCount, currency, numberWithCommas }
