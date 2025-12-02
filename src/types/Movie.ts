@@ -106,7 +106,7 @@ export interface Images {
 }
 
 export interface Data {
-  movie: Movie | null;
+  movie?: Movie | null;
   videos?: Video[];
   images?: Images[];
   countVid?: number;
@@ -116,6 +116,10 @@ export interface Data {
   awardNominationStats?: AwardNominationStats;
   interests?: Interest[];
   boxOffice?: BoxOffice;
+  name?: Name;
+  filmography?: Movie[];
+  relationship?: Relationship
+  dyk?: DidYouKnowType
 }
 
 export interface AwardNomination {
@@ -161,7 +165,28 @@ export interface Name {
   displayName: string;
   alternativeNames: string[];
   primaryImage: PrimaryImage;
-  primaryProfessions: string;
+  primaryProfessions?: string[];
+  biography?: string;
+  heightCm?: number,
+  birthName?: string,
+  birthDate?: {
+    year: number,
+    month: number
+    day: number
+  },
+  birthLocation?: string
+  deathDate?: {
+    year: number,
+    month: number
+    day: number
+  },
+  deathLocation?: string,
+  deathReason?: string,
+  meterRanking?: {
+    currentRank: number,
+    changeDirection: string,
+    difference: 0
+  }
 }
 
 export interface TopCastData {
@@ -194,4 +219,34 @@ export interface Photo {
 export interface SortTypes {
   sortOrder: "asc" | "desc";
   setSortOrder: (value: "asc" | "desc") => void;
+}
+
+export interface FilmoCredit {
+  title: Movie;
+  category: string
+}
+
+export interface Relationship {
+  relationships: Rel[]
+}
+
+export interface Rel {
+  name: Name,
+  relationType: string,
+  attributes?: string[]
+}
+
+export interface TriviaEntries {
+  id: string;
+  text: string;
+}
+
+export interface Trivia {
+  triviaEntries: TriviaEntries[],
+  totalCount: number,
+  nextPageToken: string,
+}
+
+export interface DidYouKnowType {
+  trivia?: Trivia
 }

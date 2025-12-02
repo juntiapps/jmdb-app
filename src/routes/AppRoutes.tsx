@@ -8,6 +8,8 @@ import PhotoGallery from "../pages/PhotoGallery";
 import Interests from "../pages/Interests";
 import NotFoundPage from "../pages/404";
 import InterestDetail from "../pages/InterestDetail";
+import NameDetail from "../pages/NameDetail";
+import NamePhotoGallery from "../pages/NamePhotoGallery";
 
 export default function AppRoutes() {
     return (
@@ -21,6 +23,8 @@ export default function AppRoutes() {
                 <Route path="/interest" element={<Interests />} />
                 <Route path="/interest/:id" element={<InterestDetail />} />
                 <Route path="/search" element={<SearchResults />} />
+                <Route path="/name/:id" element={<NameDetail />} />
+                <Route path="/name/:id/photogallery" element={<NamePhotoGallery />} />
 
                 {/* Fallback 404 */}
                 <Route path="*" element={<NotFoundPage />} />

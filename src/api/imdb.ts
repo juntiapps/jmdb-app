@@ -1,5 +1,5 @@
 import axios from "axios";
-import { Movie, Video, Images, Credits, TopCast, TopCastData, AwardNomination, AwardNominationStats, AwardNominationData, Interest, MovieInterest, BoxOffice, Categories } from "../types/Movie";
+import { Movie, Video, Images, Credits, TopCast, TopCastData, AwardNomination, AwardNominationStats, AwardNominationData, Interest, MovieInterest, BoxOffice, Categories, Name, FilmoCredit, Relationship, Trivia } from "../types/Movie";
 
 const BASE_URL = "https://api.imdbapi.dev";
 
@@ -34,6 +34,12 @@ interface InterestPageResponse {
     topRated: Movie[];
     popular: Movie[];
     count: number;
+}
+
+interface FilmographyResponse {
+    credits: FilmoCredit[];
+    totalCount: number;
+    nextPageToken?: string;
 }
 
 /**
@@ -164,7 +170,7 @@ export const getInterestById = async (id: string): Promise<Interest> => {
 
 export const fetchMovieByInterest = async (interestId: string): Promise<InterestPageResponse> => {
     const params = `types=MOVIE&interestIds=${interestId}`;
-    
+
     const [res, res2] = await Promise.all([
         axios.get<ApiGetMovieResponse>(`${BASE_URL}/titles?${params}&sortBy=SORT_BY_POPULARITY&sortOrder=ASC`),
         axios.get<ApiGetMovieResponse>(`${BASE_URL}/titles?${params}&sortBy=SORT_BY_USER_RATING_COUNT&sortOrder=DESC`)
@@ -183,3 +189,56 @@ export const fetchBoxOffice = async (id: string): Promise<BoxOffice> => {
 
     return res.data
 }
+
+export const getNameById = async (id: string): Promise<Name> => {
+    const res = await axios.get<Name>(`${BASE_URL}/names/${id}`);
+    return res.data;
+};
+
+export const fetchNameImages = async (id: string, types?: string, nextPageToken?: string): Promise<ApiGetImagesResponse> => {
+
+    let typeQuery = types !== undefined ? `types=${types}` : "";
+
+    const url = nextPageToken
+        ? `${BASE_URL}/names/${id}/images?${typeQuery}&pageToken=${nextPageToken}`
+        : `${BASE_URL}/names/${id}/images?${typeQuery}`;
+
+    // Hapus & jika parameter kosong
+    const cleanUrl = url.replace(/\?&/, "?").replace(/&$/, "");
+
+    // console.log("URL:", cleanUrl,'query',typeQuery);
+
+    const res = await axios.get<ApiGetImagesResponse>(cleanUrl);
+
+    return res.data
+}
+
+export const getFilmographyByNameId = async (nextPageToken?: string, id?: string): Promise<FilmographyResponse> => {
+    const url = nextPageToken
+        ? `https://api.imdbapi.dev/names/${id}/filmography?pageToken=${nextPageToken}`
+        : `https://api.imdbapi.dev/names/${id}/filmography`;
+
+    const res = await axios.get<FilmographyResponse>(url)
+
+    return res.data
+};
+
+export const fetchRelationships = async (id: string): Promise<Relationship> => {
+    const res = await axios.get<Relationship>(`${BASE_URL}/names/${id}/relationships`);
+    return res.data;
+};
+
+export const fetchTrivia = async (nextPageToken?: string, id?: string, length?: number): Promise<Trivia> => {
+    let l = '?'
+    if(length){
+        l = `?pageSize=${length}`
+    }
+
+    const url = nextPageToken
+        ? `https://api.imdbapi.dev/names/${id}/trivia${l}pageToken=${nextPageToken}`
+        : `https://api.imdbapi.dev/names/${id}/trivia${l}`;
+
+    const res = await axios.get<Trivia>(url)
+
+    return res.data
+};

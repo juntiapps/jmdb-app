@@ -5,7 +5,7 @@ import { Images, Video } from "../../types/Movie";
 import { useQuery } from "@tanstack/react-query";
 import { fetchValidImages } from "../../utils/fetchValidImages";
 
-export default function Photos({ length = 0, images = [] }: { length: number, images: Images[] }) {
+export default function Photos({ length = 0, images = [], link='#' }: { length: number, images: Images[],link?:string }) {
 
     // const imgs = images.slice(0,7)
     const { data: validImages = [], isLoading, isFetching } = useQuery({
@@ -19,7 +19,7 @@ export default function Photos({ length = 0, images = [] }: { length: number, im
 
     return (
         <>
-            <SectionTitle title="Photos" length={length} />
+            <SectionTitle title="Photos" length={length} link={link}/>
             <ImageGrid images={validImages} length={length} />
         </>
     );

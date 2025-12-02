@@ -1,18 +1,24 @@
 import { ChevronRight } from '@mui/icons-material'
 import { Box, Typography, useTheme } from '@mui/material'
 
-export default function SectionTitle({ title = "", length = 0, action = true, bottomMargin = true }) {
+export default function SectionTitle({ title = "", length = 0, action = true, bottomMargin = true, link = "#" }) {
     const theme = useTheme()
+
+    const onClickLink = () => {
+        action && window.open(link, '_blank', 'noopener,noreferrer');
+    }
     return (
-        <Box sx={{
-            display: 'flex', // pastikan flex aktif
-            flexDirection: 'row',
-            alignItems: 'center',
-            borderLeft: (theme) => `4px solid ${theme.palette.primary.main}`,
-            px: 1,
-            mt: 7,
-            mb: bottomMargin ? 3 : 1
-        }}>
+        <Box
+            onClick={() => onClickLink()}
+            sx={{
+                display: 'flex', // pastikan flex aktif
+                flexDirection: 'row',
+                alignItems: 'center',
+                borderLeft: (theme) => `4px solid ${theme.palette.primary.main}`,
+                px: 1,
+                mt: 7,
+                mb: bottomMargin ? 3 : 1,
+            }}>
             <Typography sx={{
                 fontSize: { xs: 18, sm: 22 },
                 lineHeight: 1, // penting biar text nggak ada “padding” vertikal

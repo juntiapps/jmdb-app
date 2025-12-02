@@ -1,7 +1,7 @@
 import { Box, Button, Chip, CircularProgress, Container, IconButton } from '@mui/material';
 import React, { useState, useEffect, useMemo } from 'react';
 import { Images, PageInfoTypes, Photo, SortTypes, Video } from '../../types/Movie';
-import { fetchImages, fetchVideos } from '../../api/imdb';
+import { fetchImages, fetchNameImages, fetchVideos } from '../../api/imdb';
 import Filter from '../Filter';
 import { styled } from '@mui/material/styles';
 import Dialog from '@mui/material/Dialog';
@@ -20,7 +20,7 @@ const BootstrapDialog = styled(Dialog)(({ theme }) => ({
     '& .MuiPaper-root': { width: '80%', maxWidth: 'none' },
 }));
 
-export default function DataGrid({ id }: { id: string }) {
+export default function DataGrid({ id, type = 'movie' }: { id: string, type?: 'movie' | 'name' }) {
     const [searchParams] = useSearchParams();
     const query = searchParams.get("q") || "";
 
@@ -64,7 +64,13 @@ export default function DataGrid({ id }: { id: string }) {
         }
 
         try {
-            const data = await fetchImages(id, filterType, isLoadMore ? pageToken || undefined : undefined);
+            let data: { images: Images[], nextPageToken?: string, totalCount?: number };
+            if (type === 'name') {
+                data = await fetchNameImages(id, filterType, isLoadMore ? pageToken || undefined : undefined);
+            } else {
+                data = await fetchImages(id, filterType, isLoadMore ? pageToken || undefined : undefined);
+            }
+
             const validImages = await fetchValidImages(data.images, 20)
 
             setPhotos(prev => {

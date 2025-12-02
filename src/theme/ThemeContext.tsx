@@ -55,7 +55,7 @@ export const ColorModeProvider: React.FC<{ children: ReactNode }> = ({ children 
           },
           text: {
             primary: mode === "light" ? "#000" : "#fff",
-            secondary: mode === "light" ? "#333" : "#ccc",
+            secondary: mode === "light" ? "#0000008a" : "#ccc",
           },
         },
         typography: {

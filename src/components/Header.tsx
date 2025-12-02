@@ -1,20 +1,22 @@
 import React from 'react'
-import { Movie } from '../types/Movie'
+import { Movie, Name } from '../types/Movie'
 import { Typography, Box, useTheme, Container, Grid } from '@mui/material'
 import { ChevronLeft } from '@mui/icons-material'
 import { useNavigate } from 'react-router-dom'
 import { useColorMode } from '../theme/ThemeContext'
 
 interface HeaderProps {
-    movie: Movie,
+    name?: Name,
+    movie?: Movie,
     page: string,
+    type?: 'movie' | 'name'
 }
 
-export default function Header<T>({ movie, page }: HeaderProps) {
+export default function Header<T>({ movie, name, type = 'movie', page }: HeaderProps) {
     const { mode } = useColorMode()
-    const title = movie.primaryTitle
+    const title = type === 'movie' ? movie?.primaryTitle : name?.displayName
     // const page = 'Video'
-    const bg = movie.primaryImage?.url // ganti sesuai field
+    const bg = type === 'movie' ? movie?.primaryImage?.url : name?.primaryImage.url // ganti sesuai field
     const navigate = useNavigate()
 
     return (
@@ -49,7 +51,7 @@ export default function Header<T>({ movie, page }: HeaderProps) {
 
                     {/* Back Button */}
                     <Box
-                        onClick={() => navigate('/movie/' + movie.id)}
+                        onClick={() => type === 'movie' ? navigate('/movie/' + movie?.id) : navigate('/name/' + name?.id)}
                         sx={{
                             display: 'flex',
                             alignItems: 'center',

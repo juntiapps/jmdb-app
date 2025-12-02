@@ -2,10 +2,11 @@ import { ListItem, Typography, Link, Box, Grid, useMediaQuery, List, ListItemTex
 import React, { useLayoutEffect, useRef, useState } from 'react'
 import { Movie, MovieDirector, MovieOrigin, MovieWriter, Name } from '../types/Movie';
 import { ChevronRight } from '@mui/icons-material';
+import { idText } from 'typescript';
 
 export default function _NameList(
-    { names, label, action = false, linkTemplate, linkAction }:
-        { names?: MovieDirector[] | MovieWriter[], label: string, action?: boolean, linkTemplate?: string, linkAction?: string }) {
+    { names, label, action = false, linkTemplate, linkAction, linkDisabled = false }:
+        { names?: MovieDirector[] | MovieWriter[], label: string, action?: boolean, linkTemplate?: string, linkAction?: string, linkDisabled?: boolean }) {
     let addedProps = {}
     const textRef = useRef<HTMLDivElement>(null);
     const [lineCount, setLineCount] = useState(1);
@@ -37,21 +38,38 @@ export default function _NameList(
                         {names?.map((item, index, arr) => {
                             const isLast = index === arr.length - 1;
 
+                            let url = '';
+                            if (label === 'Genre') {
+                                url = `${linkTemplate}${item.displayName}`
+                            } else {
+                                if (["Country of origin", "Language"].includes(label)) {
+                                    url = `${linkTemplate}`;
+                                } else {
+                                    if (["Director", "Writer", "Stars","Spouse","Children"].includes(label)) {
+                                        url = `/name/${item.id}`;
+                                    }
+                                }
+                            }
+
+                            console.log(url)
 
                             return (
                                 <React.Fragment key={item.id ?? index}>
                                     <Link
-                                        href={label === 'Genre' ? `${linkTemplate}${item.displayName}` : `${linkTemplate}${["Country of origin", "Language"].includes(label) ? '' : '/'}${item.id}`}
+                                       href={linkDisabled|| !item.id.includes('nm') ? undefined : url}
                                         underline="hover"
                                         target="_blank"
                                         rel="noopener noreferrer"
-                                        sx={{ textDecoration: "none" }}
+                                        sx={{
+                                            textDecoration: "none",
+                                            pointerEvents: linkDisabled || !item.id.includes('nm') ? "none" : "auto",
+                                        }}
                                     >
                                         <Typography
                                             component="span"
-                                            color="info.main"
+                                            color={linkDisabled || !item.id.includes('nm')?"secondary":"info.main"}
                                             variant="body1"
-                                            sx={{ fontWeight: 500 }}
+                                            sx={{ fontWeight: 'normal' }}
                                         >
                                             {item.displayName}
                                         </Typography>
